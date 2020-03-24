@@ -21,6 +21,14 @@ NEWSPIDER_MODULE = 'tutorial.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
+ITEM_PIPELINES = {
+    'tutorial.pipelines.TextPipeline': 300,
+    'tutorial.pipelines.MongoPipeline': 400,
+}
+
+MONGO_URI = 'localhost'
+MONGO_DB = 'tutorial'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
