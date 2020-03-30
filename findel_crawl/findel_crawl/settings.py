@@ -21,6 +21,14 @@ NEWSPIDER_MODULE = 'findel_crawl.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
+ITEM_PIPELINES = {
+    'findel_crawl.pipelines.MongoPipeline': 400,
+}
+
+MONGO_URI = 'localhost'
+MONGO_DB = 'findel_crawl'
+
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
