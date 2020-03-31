@@ -23,11 +23,12 @@ class FindelSpider(scrapy.Spider):
             #item['classsify'] = findel.css('.product-pod__price::text').extract_first()
             yield item
             
-        if response.css('.pager__link page-link page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
-            page = response.css('.pager__link page-link page-link--next::attr(data-page)').extract_first()
-            if page<3: #测试两页试试
+        if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
+            page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()
+            if page<"3": #测试两页试试
                 next = "?p=" + page
-                url = response.urljoin(next)
+                url = "https://www.findel-international.com/products" + next
+                print(url)
                 yield scrapy.Request(url=url,callback=self.parse)
 
            
