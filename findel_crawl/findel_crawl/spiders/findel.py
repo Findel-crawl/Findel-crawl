@@ -5,8 +5,19 @@ from findel_crawl.items import findelItem
 
 class FindelSpider(scrapy.Spider):
     name = 'findel'
-    allowed_domains = ['www.findel-international.com/products']
+    allowed_domains = ['www.findel-international.com']
     start_urls = ['http://www.findel-international.com/products/']
+
+    def parse_detail(self, response):
+        #调用进入详情页获得详细信息
+        item = response.meta['item']
+        if response.css('.product-details__delivery-notice::text').extract_first() is not None:
+            item['delivery'] = response.css('.product-details__delivery-notice::text').extract_first()
+        if response.css('#facetGroup-433 option::text').extract() is not None:
+            item['nature'] = response.css('#facetGroup-433 option::text').extract()
+        item['describe'] = response.css('.product-description__content div p::text').extract()  #暂时不能提取全部的描述
+        yield item 
+        
 
     def parse(self, response):
         findels = response.css('.product-pod')
@@ -17,18 +28,15 @@ class FindelSpider(scrapy.Spider):
             item['price'] = findel.css('.product-pod__price::text').extract_first()
             item['img'] = findel.css('.product-pod__image::attr("src")').extract_first()
             item['link'] = findel.css('a.product-pod__link::attr(href)').extract_first()
-            #item['nature'] = findel.css('.product-pod__price::text').extract_first()
-            #item['delivery'] = findel.css('.product-pod__price::text').extract_first()
-            #item['describe'] = findel.css('.product-pod__price::text').extract_first()
-            #item['classsify'] = findel.css('.product-pod__price::text').extract_first()
-            yield item
+            item['classsify'] = item['link'][0:-len(item['code'])]
+            yield scrapy.Request(url=allowed_domains.join(item['link']), meta={'item': item}, callback=self.parse_detail) #此处进入详情页调用parse_detail
+            
             
         if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
             page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()
-            if page<"3": #测试两页试试
+            if page<"2": #测试1页试试
                 next = "?p=" + page
                 url = "https://www.findel-international.com/products" + next
-                print(url)
                 yield scrapy.Request(url=url,callback=self.parse)
 
            
