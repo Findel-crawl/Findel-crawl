@@ -33,9 +33,9 @@ class MongoPipeline(object):
 
     def process_item(self,item,spider):
         name = item.__class__.__name__
-        self.db[name].insert(dict(item)) 
+        self.db[name].update({'code': item['code']}, dict(item), True)
         return item  #这个item返回才能被其他的中间件获取
-
+            
     def close_spider(self,spider):
         self.client.close()  #关闭数据库连接
 

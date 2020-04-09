@@ -13,9 +13,9 @@ class FindelSpider(scrapy.Spider):
         item = response.meta['item']
         if response.css('.product-details__delivery-notice::text').extract_first() is not None:
             item['delivery'] = response.css('.product-details__delivery-notice::text').extract_first()
-        if response.css('#facetGroup-433 option::text').extract() is not None:
+        if response.css('#facetGroup-433').extract_first() is not None:
             item['nature'] = response.css('#facetGroup-433 option::text').extract()
-        item['describe'] = response.css('.product-description__content div p::text').extract()  #暂时不能提取全部的描述
+        item['describe'] = response.css('.product-description__content div p::text').extract()  
         yield item 
         
 
@@ -27,17 +27,16 @@ class FindelSpider(scrapy.Spider):
             item['code'] = findel.css('.product-pod__code::text').extract_first()
             item['price'] = findel.css('.product-pod__price::text').extract_first()
             item['img'] = findel.css('.product-pod__image::attr("src")').extract_first()
-            item['link'] = findel.css('a.product-pod__link::attr(href)').extract_first()
-            item['classsify'] = item['link'][0:-len(item['code'])]
-            yield scrapy.Request(url=allowed_domains.join(item['link']), meta={'item': item}, callback=self.parse_detail) #此处进入详情页调用parse_detail
+            item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
+            item['classsify'] = item['link'][36:-len(item['code'])]
+            yield scrapy.Request(url=item['link'], meta={'item': item}, callback=self.parse_detail) #此处进入详情页调用parse_detail
             
             
         if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
             page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()
-            if page<"2": #测试1页试试
-                next = "?p=" + page
-                url = "https://www.findel-international.com/products" + next
-                yield scrapy.Request(url=url,callback=self.parse)
+            next = "?p=" + page
+            url = "https://www.findel-international.com/products" + next
+            yield scrapy.Request(url=url,callback=self.parse,dont_filter=False)
 
            
  
