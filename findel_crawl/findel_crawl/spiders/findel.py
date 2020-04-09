@@ -24,19 +24,21 @@ class FindelSpider(scrapy.Spider):
         for findel in findels:
             item = findelItem()
             item['title'] = findel.css('.product-pod__title::text').extract_first()
-            item['code'] = findel.css('.product-pod__code::text').extract_first()
             item['price'] = findel.css('.product-pod__price::text').extract_first()
             item['img'] = findel.css('.product-pod__image::attr("src")').extract_first()
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
-            item['classsify'] = item['link'][36:-len(item['code'])]
+            item['code'] = item['link'][item['link'].rindex('/')+1:]
+            item['classsify'] = item['link'][37:-len(item['code'])]
             yield scrapy.Request(url=item['link'], meta={'item': item}, callback=self.parse_detail) #此处进入详情页调用parse_detail
             
             
+            
         if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
-            page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()
-            next = "?p=" + page
-            url = "https://www.findel-international.com/products" + next
-            yield scrapy.Request(url=url,callback=self.parse,dont_filter=False)
+            page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()     
+                next = "?p=" + page
+                print(page)
+                url = "https://www.findel-international.com/products" + next
+                yield scrapy.Request(url=url,callback=self.parse,dont_filter=False)
 
            
  

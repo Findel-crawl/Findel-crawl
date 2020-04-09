@@ -1,0 +1,16 @@
+基本配置：
+安装python、mongodb数据库
+安装库文件 :（cmd模式下输入以下指令）
+	安装lxml :pip install lxml
+	安装pyOpenSSL:pip install pyOpenSSL
+	安装Twisted:pip install Twisted
+	安装Pywin32:pip install pywin32
+	最后安装Scrapy:pip install scrapy
+运行：cmd进入findel_crawl 目录下 
+（我的是F:\github\Findel-crawl\findel_crawl）
+输入指令：scrapy crawl findel -s JOBDIR=crawls/somespider-1       (该指令可以持久化运行爬虫)
+	  若想要中途停止：可以按CTRL+C
+恢复爬虫：scrapy crawl findel -s JOBDIR=crawls/somespider-1 
+
+等待指令结束，查看mongo数据库，可以看到在findel_crawl下有一个findelItem表单，里面存储着爬到的数据。
+
