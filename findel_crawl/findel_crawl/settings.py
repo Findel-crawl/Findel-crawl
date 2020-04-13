@@ -29,6 +29,7 @@ MONGO_URI = 'localhost'
 MONGO_DB = 'findel_crawl'
 
 
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 

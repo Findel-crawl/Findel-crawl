@@ -6,6 +6,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from twisted.internet.error import TimeoutError
 
 
 class FindelCrawlSpiderMiddleware(object):
@@ -88,7 +89,7 @@ class FindelCrawlDownloaderMiddleware(object):
         # - return a Request object
         # - or raise IgnoreRequest
         return response
-
+    
     def process_exception(self, request, exception, spider):
         # Called when a download handler or a process_request()
         # (from other downloader middleware) raises an exception.
@@ -97,7 +98,8 @@ class FindelCrawlDownloaderMiddleware(object):
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
-        pass
+        if isinstance(exception, TimeoutError):
+            return request
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
