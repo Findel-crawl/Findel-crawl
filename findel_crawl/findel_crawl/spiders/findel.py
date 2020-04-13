@@ -27,7 +27,7 @@ class FindelSpider(scrapy.Spider):
             item['price'] = findel.css('.product-pod__price::text').extract_first()
             item['img'] = findel.css('.product-pod__image::attr("src")').extract_first()
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
-            item['code'] = item['link'][item['link'].rindex('/')+1:]
+            item['code'] = item['link'][item['link'].rindex('/')+1:].upper()
             item['classsify'] = item['link'][37:-len(item['code'])]
             yield scrapy.Request(url=item['link'], meta={'item': item}, callback=self.parse_detail) #此处进入详情页调用parse_detail
             
