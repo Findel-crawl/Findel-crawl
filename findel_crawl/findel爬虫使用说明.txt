@@ -10,6 +10,11 @@
 运行：cmd进入findel_crawl 目录下 
 （我的是F:\github\Findel-crawl\findel_crawl）
 
+不可暂停的运行方法：
+输入指令：scrapy crawl findel
+
+
+可暂停的运行方法：
 输入指令：scrapy crawl findel -s JOBDIR=crawls/somespider-1       
 	(该指令可以持久化运行爬虫，并且生成一个叫做crawls的文件夹，该文件夹下有一个记录请求信息的文件（somespider-1），
 	每次输入该指令都会更新somespider-1，并使爬虫从上次记录的请求开始爬取)
@@ -18,12 +23,15 @@
 
 恢复爬虫：scrapy crawl findel -s JOBDIR=crawls/somespider-1 
 
-若要重新爬取，需要将上面指令中的somespider-1换一个名字即可，或者删除somespider-1文件（但是上一个指令就只能从头开始爬取）
+若要重新从头爬取，需要将上面指令中的somespider-1换一个名字即可，或者删除somespider-1文件（但是上一个指令就只能从头开始爬取）
+
+
+
 
 等待指令结束，查看mongo数据库，可以看到在findel_crawl下有一个findelItem表单，里面存储着爬到的数据。
 
 
-若爬虫卡住，可能是爬取的过于频繁，导致对方服务器崩溃（目前还未发现对方服务器有反爬机制），此时可暂停，等一会再继续
+若爬虫卡住，可能是爬取的过于频繁，导致对方服务器崩溃（目前还未发现对方服务器有反爬机制），此时需要等待一会，也可以暂停等一会再继续
 
 github地址：https://github.com/Findel-crawl/Findel-crawl
 
