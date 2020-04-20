@@ -19,11 +19,14 @@ NEWSPIDER_MODULE = 'findel_crawl.spiders'
 #USER_AGENT = 'findel_crawl (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 ITEM_PIPELINES = {
-    'findel_crawl.pipelines.MongoPipeline': 400,
+    'findel_crawl.pipelines.ImagePipeline': 300,
+    'findel_crawl.pipelines.MongoPipeline': 301,
 }
+
+IMAGES_STORE = './images'
 
 MONGO_URI = 'localhost'
 MONGO_DB = 'findel_crawl'

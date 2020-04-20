@@ -6,7 +6,7 @@ from findel_crawl.items import findelItem
 class FindelSpider(scrapy.Spider):
     name = 'findel'
     allowed_domains = ['www.findel-international.com']
-    start_urls = ['https://www.findel-international.com/products/']
+    start_urls = ['https://www.findel-international.com/products?p=1&show=100/']
 
     def parse(self, response):
         findels = response.css('.product-pod')
@@ -14,7 +14,10 @@ class FindelSpider(scrapy.Spider):
             item = findelItem()
             item['title'] = findel.css('.product-pod__title::text').extract_first()
             item['price'] = findel.css('.product-pod__price::text').extract_first()
-            item['img'] = findel.css('.product-pod__image::attr("src")').extract_first()
+            item['img'] = [findel.css('.product-pod__image::attr("src")').extract_first()]
+            img_clear = item['img'][0][0:item['img'][0].rindex('=')+1] + '1000'
+            item['img'].append(img_clear)
+            #item['img_clear'] = item['img'][:item['img'].rindex('=')+1] + '1000'
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
             item['code'] = item['link'][item['link'].rindex('/')+1:].upper()
             item['classsify'] = item['link'][37:-len(item['code'])]
@@ -22,7 +25,7 @@ class FindelSpider(scrapy.Spider):
                     
         if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
             page = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()     
-            next = "?p=" + page
+            next = "?p=" + page + "&show=100"
             print(page)
             url = "https://www.findel-international.com/products" + next
             yield scrapy.Request(url=url,callback=self.parse,dont_filter=False)

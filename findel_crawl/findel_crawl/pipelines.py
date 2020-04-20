@@ -39,3 +39,27 @@ class MongoPipeline(object):
     def close_spider(self,spider):
         self.client.close()  #关闭数据库连接
 
+
+from scrapy import Request
+from scrapy.exceptions import DropItem
+from scrapy.pipelines.images import ImagesPipeline
+import os
+
+class ImagePipeline(ImagesPipeline):
+    def file_path(self,request,response=None,info=None):
+        file_name = request.url.split('=')[-1] + request.url.split('/')[-1].split('?')[0]
+        return file_name
+
+    def item_completed(self,results,item,info):
+        image_path= [x['path'] for ok, x in results if ok]
+        if not image_path:
+            raise DropItem('Image Dowmloaded Faild')
+        else:
+            item['img_path'] = image_path       
+        return item
+
+    def get_media_requests(self,item,info):
+        for img_url in item['img']:
+            yield Request(img_url,meta={'mid_item':item['title']})
+        
+
