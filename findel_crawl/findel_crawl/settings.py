@@ -21,6 +21,8 @@ NEWSPIDER_MODULE = 'findel_crawl.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+LOG_LEVEL ='WARNING'
+
 ITEM_PIPELINES = {
     'findel_crawl.pipelines.ImagePipeline': 300,
     'findel_crawl.pipelines.MongoPipeline': 301,
