@@ -19,4 +19,5 @@ class findelItem(scrapy.Item):
     price = scrapy.Field()    #商品价格
     describe = scrapy.Field() #商品描述 (需要进入页面)
     nature = scrapy.Field()   #商品属性（颜色）(需要进入页面)
+    size = scrapy.Field()     #商品属性（大小）(需要进入页面)
     delivery = scrapy.Field() #商品货期 (需要进入页面)
