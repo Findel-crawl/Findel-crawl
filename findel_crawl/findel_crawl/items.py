@@ -12,11 +12,5 @@ class findelItem(scrapy.Item):
     
     link = scrapy.Field()     #链接
     classsify = scrapy.Field()#目录路径，需要每个类别用/分开
-    img = scrapy.Field()      #缩略图
-    #img_clear = scrapy.Field()#清晰图调整with即可
     title = scrapy.Field() #商品标题
     code = scrapy.Field()   #商品编号
-    price = scrapy.Field()    #商品价格
-    describe = scrapy.Field() #商品描述 (需要进入页面)
-    nature = scrapy.Field()   #商品属性（颜色）(需要进入页面)
-    delivery = scrapy.Field() #商品货期 (需要进入页面)
