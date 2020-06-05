@@ -14,3 +14,4 @@ class findelItem(scrapy.Item):
     classsify = scrapy.Field()#目录路径，需要每个类别用/分开
     title = scrapy.Field() #商品标题
     code = scrapy.Field()   #商品编号
+    age_range= scrapy.Field()   #商品年龄范围

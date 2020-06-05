@@ -17,41 +17,32 @@ class FindelSpider(scrapy.Spider):
         print(some_urls)        
         for url in some_urls:
             real_url = 'https://www.findel-international.com' + url + '?p=1&show=100'
-            yield scrapy.Request(real_url,callback=self.parse_agerange)  
+            yield scrapy.Request(real_url,callback=self.parse2)  
             
 
-    #以上部分可以直接爬取所有的商品的信息包括（title，link，code，classsify），但是没有年龄范围
-    #接下来利用mongo的更新功能，将年龄范围属性更新上去
-
-
-    def parse_agerange(self, response):
-        Age_ranges = response.css('div.filter-panel.filter-panel--closed[data-facet-type="Age Range"] .filter-panel__list.js-filter-panel-list a.filter-variant::attr(href)').extract()
-        if Age_ranges:
-            print(Age_ranges)
-            for age_range in Age_ranges:
-                age_url = 'https://www.findel-international.com' + age_range + "&sort=&p=1"
-                yield scrapy.Request(age_url,callback=self.parse1)
-
-
-    def parse1(self, response):
+    def parse2(self, response):
         findels = response.css('.product-pod')
-        print(response.request.url + '****************************************')
-        age = response.request.url[response.request.url.index('filter')+7:response.request.url.index('&f=')]
         for findel in findels:
             item = findelItem()
             item['title'] = findel.css('.product-pod__title::text').extract_first()
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
             item['code'] = item['link'][item['link'].rindex('/')+1:].upper()
             item['classsify'] = item['link'][45:-(len(item['code'])+len(item['title'])+2)]
-            item['age_range'] = age
+            item['age_range'] = '无年龄范围'
             yield item
                     
         if response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first() is not None: # 如果有下一页标签,没有表示结束了
-            page1 = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()     
-            next1 = response.request.url[:-1] + page1
-            print(next1 + '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'+page1)
-            yield scrapy.Request(next1,callback=self.parse1)
+            page2 = response.css('a.pager__link.page-link.page-link--next::attr(data-page)').extract_first()     
+            next2 = response.request.url[0:response.request.url.rindex('?')+3] + page2 + '&show=100'
+            print(next2)
+            yield scrapy.Request(next2,callback=self.parse2)
 
+
+    #以上部分可以直接爬取所有的商品的信息包括（title，link，code，classsify），但是没有年龄范围
+    #接下来利用mongo的更新功能，将年龄范围属性更新上去
+
+
+   
 
             
 
