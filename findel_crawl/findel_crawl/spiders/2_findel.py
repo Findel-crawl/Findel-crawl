@@ -27,7 +27,8 @@ class FindelSpider(scrapy.Spider):
             item['title'] = findel.css('.product-pod__title::text').extract_first()
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
             item['code'] = item['link'][item['link'].rindex('/')+1:].upper()
-            item['classsify'] = item['link'][45:-(len(item['code'])+len(item['title'])+2)]
+            item['classify'] = item['link'][45:item['link'][item['link'][item['link'][45:].index('/')+46:].index('/')+item['link'][45:].index('/')+47:].index('/')+item['link'][item['link'][45:].index('/')+46:].index('/')+item['link'][45:].index('/')+47]
+            #存在title中含有/字符的情况，这里只从URL中提取前三级分类
             item['age_range'] = '无年龄范围'
             yield item
                     

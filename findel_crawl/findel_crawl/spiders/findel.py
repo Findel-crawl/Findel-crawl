@@ -42,7 +42,6 @@ class FindelSpider(scrapy.Spider):
             item['title'] = findel.css('.product-pod__title::text').extract_first()
             item['link'] = 'https://www.findel-international.com'+findel.css('a.product-pod__link::attr(href)').extract_first()
             item['code'] = item['link'][item['link'].rindex('/')+1:].upper()
-            item['classsify'] = item['link'][45:-(len(item['code'])+len(item['title'])+2)]
             item['age_range'] = age
             yield item
                     
